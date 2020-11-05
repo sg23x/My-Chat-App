@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_chat_app/UI/login.dart';
 import 'package:my_chat_app/UI/test_homescreen.dart';
 
 // ignore: must_be_immutable
@@ -49,7 +50,10 @@ class SignupScreen extends StatelessWidget {
                   .createUserWithEmailAndPassword(
                       email: email, password: password)
                   .then((user) {
-                FirebaseFirestore.instance.collection('users').add({
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.user.uid)
+                    .set({
                   'email': user.user.email,
                   'uid': user.user.uid,
                   'name': name,
@@ -69,6 +73,19 @@ class SignupScreen extends StatelessWidget {
               });
             },
             child: Text("Signup"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => LoginScreen(),
+                ),
+              );
+            },
+            child: Text(
+              'Go to login',
+            ),
           ),
         ],
       ),
