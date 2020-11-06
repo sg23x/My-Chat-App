@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_chat_app/UI/signup.dart';
 import 'package:my_chat_app/UI/test_homescreen.dart';
 
+// ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
   String email, password;
   @override
@@ -37,20 +37,14 @@ class LoginScreen extends StatelessWidget {
                 password: password,
               )
                   .then((user) {
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(user.user.uid)
-                    .get()
-                    .then((value) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => TestHomeScreen(
-                        name: value['name'],
-                      ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => TestHomeScreen(
+                      user: user.user,
                     ),
-                  );
-                });
+                  ),
+                );
               }).catchError((e) {
                 print("login error $e");
               });

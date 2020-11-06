@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_chat_app/UI/login.dart';
 import 'package:my_chat_app/UI/test_homescreen.dart';
+import 'package:my_chat_app/services/user_management.dart';
 
 // ignore: must_be_immutable
 class SignupScreen extends StatelessWidget {
@@ -49,25 +50,13 @@ class SignupScreen extends StatelessWidget {
               FirebaseAuth.instance
                   .createUserWithEmailAndPassword(
                       email: email, password: password)
-                  .then((user) {
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(user.user.uid)
-                    .set({
-                  'email': user.user.email,
-                  'uid': user.user.uid,
-                  'name': name,
-                  'username': username,
-                }).then((v) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => TestHomeScreen(
-                        name: name,
-                      ),
-                    ),
-                  );
-                });
+                  .then((newUser) {
+                UserManagement().storeNewUser(
+                  user: newUser,
+                  context: context,
+                  name: name,
+                  username: username,
+                );
               }).catchError((e) {
                 print("signup error $e");
               });
